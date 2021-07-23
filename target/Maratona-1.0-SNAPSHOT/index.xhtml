@@ -6,12 +6,15 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:jsf="http://xmlns.jcp.org/jsf">
 
 <h:head>
 
 </h:head>
 <h:body>
+    <!--    Definindo valores para serem usados em uma lista (lambda)-->
+    <c:set var="numerosList" value="#{[1,2,3,4,5,6,7,8,9,10]}"/>
     <p:importEnum type="bean.model.enums.Turno"
                   var="Turno"
                   allSuffix="ALL_ENUM_VALUES"/>
@@ -35,7 +38,7 @@
     <!-- Arrays   -->
     <h:outputLabel value="-----------ARRAYS---------"/><br/>
     <h:outputLabel value="#{estudanteRegistrarBean.nomesArray[0]} #{estudanteRegistrarBean.nomesArray[1]}
-#{estudanteRegistrarBean.nomesArray[2]}"/><br/>
+ #{estudanteRegistrarBean.nomesArray[2]}"/><br/>
     <!-- ui: repeat arrays   -->
     <h:outputLabel value="-----------UI:REPEAT ARRAYS---------"/><br/>
     <ui:repeat value="#{estudanteRegistrarBean.nomesArray}" var="nome">
@@ -93,14 +96,6 @@
         </h:commandButton>
         <!--PanelGrid serve para encapsular as notas-->
         <h:panelGrid id="notasGrid">
-          <!--  <h:outputText value="#{estudanteRegistrarBean.estudante.nome}"/>
-            <h:outputText value="#{estudanteRegistrarBean.estudante.sobrenome}"/>
-            <h:outputText value="#{estudanteRegistrarBean.estudante.nota1}"
-                          jsf:rendered="#{estudanteRegistrarBean.mostrarNotas}"/>
-            <h:outputText value="#{estudanteRegistrarBean.estudante.nota2}"
-                          jsf:rendered="#{estudanteRegistrarBean.mostrarNotas}"/>
-            <h:outputText value="#{estudanteRegistrarBean.estudante.nota3}"
-                          jsf:rendered="#{estudanteRegistrarBean.mostrarNotas}"/>-->
             <div jsf:rendered="#{estudanteRegistrarBean.mostrarNotas}">
                 <h:outputText value="#{estudanteRegistrarBean.estudante.nome}"/>
                 <h:outputText value="#{estudanteRegistrarBean.estudante.sobrenome}"/>
@@ -112,14 +107,35 @@
 
         <a href="http://www.google.com.br" target=" blank">www.google.com.br</a>
     </h:form>
-    <!--&lt;!&ndash;Lambdas&ndash;&gt;
+    <!--Lambdas-->
     #{(soma -> soma + num) (10)}<br/>
     #{((v1,v2,v3) -> v1*v2*v3) (1,5,10)}<br/>
     #{(x ->x*x*x) (2)} <br/>
     #{cubo=(x ->x*x*x);cubo (10)}<br/>
+    <h:form>
+        <h:commandButton value="Calcular Cubo"
+                         actionListener="#{estudanteRegistrarBean.calcularCubo((x ->x*x*x),(10))}"/>
+    </h:form>
+    <!--Lists-->
+    <ui:repeat value="#{['DevDojo', 'e', 'incrivel']}" var="dev">
+        #{dev}
+    </ui:repeat><br/>
+    <!--Set, não mantem a ordem-->
+    <ui:repeat value="#{{'DevDojo', 'e', 'incrivel', 'mesmo'}}" var="dev">
+        #{dev}
+    </ui:repeat><br/>
+    <ui:repeat value="#{numerosList.stream().filter(v-> v>5).toList()}" var="result">
+        #{result}
+    </ui:repeat><br/>
+    <!--Media-->
+    #{numerosList.stream().average().get()}<br/>
+    <!--Soma-->
+    #{numerosList.stream().sum()}<br/>
+    <!--Soma dos valores > que 5-->
+    #{numerosList.stream().filter(v-> v>5).sum()}
 
-    &lt;!&ndash; Utilizando AJAX &ndash;&gt;
-    <h:outputScript libraly="jsf.js" library="javax.faces" target="head"></h:outputScript>-->
+    <!-- Utilizando AJAX -->
+    <h:outputScript libraly="jsf.js" library="javax.faces" target="head"></h:outputScript>
 </h:body>
 <script type="text/javascript">
     function fazMagica(magica) {
@@ -130,6 +146,4 @@
         alert(nome);
     }
 </script>
-
-
 </html>

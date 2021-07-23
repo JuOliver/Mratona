@@ -5,9 +5,11 @@ import com.sun.faces.renderkit.html_basic.HtmlBasicRenderer;
 
 import java.io.Serializable;
 import java.util.*;
+import javax.el.LambdaExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import static java.util.Arrays.asList;
@@ -68,6 +70,12 @@ public class EstudanteRegistrarBean {
 
     public void esconderLink(){
         this.mostrarLink = false;
+    }
+
+    public void calcularCubo (LambdaExpression le, long value) {
+        long result = (long)
+                le.invoke(FacesContext.getCurrentInstance().getELContext(), value);
+        System.out.println(result);
     }
 
     public boolean isMostrarLink() {
